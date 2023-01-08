@@ -54,6 +54,10 @@ def analyzeCallBack():
     for i in range(0,12):
         #split the stats for analysis
         temp_entry = entry_arr[i].get().split()
+        
+        if(len(temp_entry) == 41):
+            temp_entry = temp_entry[14:]
+        
         #store the gender
         if(len(temp_entry) == 27):
             temp_sex = "M"
