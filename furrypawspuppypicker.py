@@ -23,6 +23,7 @@ fourthPref = "Stat Pref"
 labelHolder = {}
 saveHolder1 = {}
 saveHolder2 = {}
+selected = None
 
 class Puppy:
     def __init__(self, number, sex, size, sizeCount, statCount, HHCount, hhCount):
@@ -221,12 +222,30 @@ for i in range(0,12):
     check_arr[i].grid(row = i, column = 1, sticky = W, pady = 2)
    
 
+
+def popup(event):
+    global selected
+    try:
+        menu.tk_popup(event.x_root,event.y_root) # Pop the menu up in the given coordinates
+        selected = event.widget
+    finally:
+        menu.grab_release() # Release it once an option is selected
+
+def paste():
+    clipboard = root.clipboard_get() # Get the copied item from system clipboard
+    selected.insert('end',clipboard) # Insert the item into the entry widget
+
+def copy():
+    inp = selected.get() # Get the text inside entry widget
+    root.clipboard_clear() # Clear the tkinter clipboard
+    root.clipboard_append(inp) # Append to system clipboard
        
     
 #store all entries in array
 for i in range(0,12):
     entry_arr.append(tk.Entry(root))
     entry_arr[i].grid(row = i, column = 2, sticky = W, pady = 2)
+    entry_arr[i].bind('<Button-3>',popup)
 
 
 #button user presses to analyze puppy data
@@ -305,5 +324,9 @@ for r in range(0,12):
     tempButt = tk.Button(root, text ="Copy")
     tempButt.grid(row = r, column = 10, sticky = W, pady = 2)
     tempButt.configure(command=lambda widget=r: copyCallBack(widget))
+    
+menu = Menu(root,tearoff=0) # Create a menu
+menu.add_command(label='Copy',command=copy) # Create labels and commands
+menu.add_command(label='Paste',command=paste)
 
 root.mainloop()
